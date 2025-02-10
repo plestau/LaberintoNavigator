@@ -10,8 +10,7 @@ public class Meta : MonoBehaviour
     {
         if (other.CompareTag("Jugador"))
         {
-            Debug.Log("Terminado");
-            restartCoroutine = StartCoroutine(RestartSceneAfterDelay(3f));
+            StartCoroutine(RestartSceneAfterDelay(2f));
         }
     }
 
@@ -29,6 +28,7 @@ public class Meta : MonoBehaviour
 
     private IEnumerator RestartSceneAfterDelay(float delay)
     {
+        LoadingScreenManager.instance.ShowLoadingScreen();
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

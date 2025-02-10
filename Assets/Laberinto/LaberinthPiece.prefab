@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3724170505258395453}
   - component: {fileID: 9066346530368697594}
   - component: {fileID: 367054206275143242}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 9199801120573232656}
   - component: {fileID: 3455120459825574821}
   - component: {fileID: 951557518372551077}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 6750845447807159425}
   - component: {fileID: 6959664248577574565}
   - component: {fileID: 2674826858594449860}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LaberinthPiece
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 2864247041697915377}
   - component: {fileID: 5037522749707897052}
   - component: {fileID: 7305811795884540394}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +481,7 @@ GameObject:
   - component: {fileID: 2656653083020093284}
   - component: {fileID: 9069895713677704211}
   - component: {fileID: 3859526521227639806}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

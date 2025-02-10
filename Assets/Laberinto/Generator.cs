@@ -2,15 +2,18 @@ using System.Collections;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Generator : MonoBehaviour
 {
     public int xMax, zMax; // Dimensiones del laberinto
-    public GameObject piece, laberinthPiece, npcPrefab, metaPrefab;
+    public GameObject laberinthPiece, npcPrefab, metaPrefab;
     public GameObject[,] map;
     public int limit;
     public static Generator gen;
     private NavMeshSurface navMeshSurface;
+    public GameObject enemyPrefab;
+    public int numberOfEnemies;
 
     private Vector3 piezaEscala = new Vector3(5f, 0.2f, 5f);
 
@@ -24,13 +27,45 @@ public class Generator : MonoBehaviour
 
     private IEnumerator GenerateLabyrinth()
     {
+        if (LoadingScreenManager.instance != null)
+        {
+            LoadingScreenManager.instance.ShowLoadingScreen();
+            LoadingScreenManager.instance.SetProgress(0.1f);
+        }
+
         GenerateFirstFloor();
         yield return new WaitForSeconds(0.1f);
 
+        if (LoadingScreenManager.instance != null)
+        {
+            LoadingScreenManager.instance.SetProgress(0.5f);
+        }
         AdjustWalls();
         CreateExit();
+        SpawnEnemies();
 
         yield return new WaitForEndOfFrame();
+
+        if (LoadingScreenManager.instance != null)
+        {
+            LoadingScreenManager.instance.SetProgress(1.0f);
+            LoadingScreenManager.instance.HideLoadingScreen();
+        }
+    }
+    
+    private void SpawnEnemies()
+    {
+        for (int i = 0; i < numberOfEnemies; i++)
+        {
+            Vector3 randomPosition;
+            NavMeshHit hit;
+            do
+            {
+                randomPosition = new Vector3(Random.Range(0, xMax) * piezaEscala.x, 0, Random.Range(0, zMax) * piezaEscala.z);
+            } while (!NavMesh.SamplePosition(randomPosition, out hit, 1.0f, NavMesh.AllAreas));
+
+            Instantiate(enemyPrefab, hit.position, Quaternion.identity);
+        }
     }
     
     private void UpdateNavMeshBounds()
@@ -46,31 +81,42 @@ public class Generator : MonoBehaviour
 
     public void SpawnNPC()
     {
-        // Calcular la posición inicial del jugador en el extremo opuesto de la salida
+        // Calcular la posición de la salida
+        Vector3 exitPosition = new Vector3(xMax * piezaEscala.x, 0, Random.Range(0, zMax) * piezaEscala.z);
+
+        // Calcular la posición más alejada de la salida
         Vector3 playerStartPosition = new Vector3(0, 1, (zMax / 2) * piezaEscala.z);
 
         UnityEngine.AI.NavMeshHit hit;
         if (UnityEngine.AI.NavMesh.SamplePosition(playerStartPosition, out hit, 1.0f, UnityEngine.AI.NavMesh.AllAreas))
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Jugador");
-            if (player == null)
-            {
-                // Instanciar el prefab del jugador si no existe
-                player = Instantiate(npcPrefab, hit.position, Quaternion.identity);
-                player.tag = "Jugador";
-            }
-            else
-            {
-                player.transform.position = hit.position;
-                player.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(hit.position);
-            }
-
-            StartCoroutine(AdjustCameraAfterDelay(player.transform));
+            InstantiatePlayer(hit.position);
         }
         else
         {
-            Debug.LogError("Failed to find a valid NavMesh position for the player.");
+            Debug.LogError("Failed to find a valid NavMesh position for the player. Forcing spawn at default position.");
+            // la posicion por defecto es el centro del laberinto
+            Vector3 defaultPosition = new Vector3((xMax / 2) * piezaEscala.x, 0, (zMax / 2) * piezaEscala.z);
+            InstantiatePlayer(defaultPosition);
         }
+    }
+
+    private void InstantiatePlayer(Vector3 position)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Jugador");
+        if (player == null)
+        {
+            // Instanciar el prefab del jugador si no existe
+            player = Instantiate(npcPrefab, position, Quaternion.identity);
+            player.tag = "Jugador";
+        }
+        else
+        {
+            player.transform.position = position;
+            player.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(position);
+        }
+
+        StartCoroutine(AdjustCameraAfterDelay(player.transform));
     }
 
     private IEnumerator AdjustCameraAfterDelay(Transform playerTransform)
