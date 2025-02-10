@@ -1,6 +1,5 @@
 using System.Collections;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 

@@ -1,0 +1,4 @@
+repository "LaberintoNavigator/LaberintoNavigator2@1375663033311@cloud"
+  path "/"
+    br "/main"
+    co "/main"
