@@ -184,8 +184,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 8636590609491230172, guid: ffdd13cbe3493fe479c14c738aae5680, type: 3}
-  chaseSpeed: 5
-  patrolSpeed: 2
+  chaseSpeed: 10
+  patrolSpeed: 5
 --- !u!1 &2254717012638749054
 GameObject:
   m_ObjectHideFlags: 0
